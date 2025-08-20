@@ -1,0 +1,6 @@
+2025-08-20 09:17:49,771 INFO RPC interface 'supervisor' initialized
+2025-08-20 09:17:49,771 CRIT Server 'unix_http_server' running without any HTTP authentication checking
+2025-08-20 09:17:49,773 INFO daemonizing the supervisord process
+2025-08-20 09:17:49,774 INFO supervisord started with pid 1372
+2025-08-20 09:17:50,778 INFO spawned: 'supermarket-server' with pid 1390
+2025-08-20 09:17:51,779 INFO success: supermarket-server entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D スーパーマーケットシミュレーション</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 3Dシーンコンテナ -->
+        <div id="scene-container"></div>
+        
+        <!-- UIコントロールパネル -->
+        <div id="control-panel">
+            <h3>シミュレーション制御</h3>
+            
+            <div class="control-group">
+                <label for="simulation-speed">シミュレーション速度:</label>
+                <input type="range" id="simulation-speed" min="0.1" max="3" step="0.1" value="1">
+                <span id="speed-value">1.0x</span>
+            </div>
+            
+            <div class="control-group">
+                <label for="agent-count">買い物客数:</label>
+                <input type="range" id="agent-count" min="1" max="20" step="1" value="10">
+                <span id="agent-count-value">10</span>
+            </div>
+            
+            <div class="control-group">
+                <button id="pause-btn">一時停止</button>
+                <button id="reset-btn">リセット</button>
+            </div>
+            
+            <div class="stats">
+                <h4>統計情報</h4>
+                <div>アクティブ客数: <span id="active-customers">0</span></div>
+                <div>レジ待ち: <span id="queue-length">0</span></div>
+                <div>総売上: ¥<span id="total-sales">0</span></div>
+            </div>
+        </div>
+        
+        <!-- ローディング画面 -->
+        <div id="loading">
+            <div class="loading-content">
+                <h2>3Dスーパーマーケット</h2>
+                <div class="loading-bar">
+                    <div class="loading-progress"></div>
+                </div>
+                <p>シミュレーションを初期化中...</p>
+            </div>
+        </div>
+        
+        <!-- 情報パネル -->
+        <div id="info-panel">
+            <h3>操作方法</h3>
+            <ul>
+                <li>左クリック + ドラッグ: カメラ回転</li>
+                <li>右クリック + ドラッグ: カメラパン</li>
+                <li>スクロール: ズーム</li>
+                <li>ESC: このパネルを閉じる</li>
+            </ul>
+            <button id="close-info">閉じる</button>
+        </div>
+    </div>
+    
+    <!-- Three.js ライブラリ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    
+    <!-- アプリケーションスクリプト -->
+    <script src="js/pathfinding.js"></script>
+    <script src="js/agent.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
