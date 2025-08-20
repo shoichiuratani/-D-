@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOTTE | 3D買い物行動予測ダッシュボード</title>
+    <link rel="stylesheet" href="css/lotte-dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="app" class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-left">
+                <div class="logo-section">
+                    <div class="lotte-logo">
+                        <span class="logo-text">LOTTE</span>
+                        <span class="logo-subtitle">Behavioral Analytics</span>
+                    </div>
+                </div>
+                <nav class="nav-tabs">
+                    <button class="nav-tab active" data-tab="simulation">3Dシミュレーション</button>
+                    <button class="nav-tab" data-tab="analytics">POP効果分析</button>
+                    <button class="nav-tab" data-tab="insights">インサイト</button>
+                </nav>
+            </div>
+            <div class="header-right">
+                <div class="time-info">
+                    <i class="fas fa-clock"></i>
+                    <span id="current-time"></span>
+                </div>
+                <div class="user-profile">
+                    <i class="fas fa-user-circle"></i>
+                    <span>マーケティング分析者</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Simulation Tab -->
+            <div id="simulation-tab" class="tab-content active">
+                <div class="simulation-layout">
+                    <!-- 3D Scene Container -->
+                    <div class="scene-section">
+                        <div class="scene-header">
+                            <h2>3D店舗シミュレーション</h2>
+                            <div class="scene-controls">
+                                <button id="play-pause-btn" class="control-btn primary">
+                                    <i class="fas fa-play"></i> 開始
+                                </button>
+                                <button id="reset-btn" class="control-btn secondary">
+                                    <i class="fas fa-redo"></i> リセット
+                                </button>
+                            </div>
+                        </div>
+                        <div id="scene-container" class="scene-viewport"></div>
+                        
+                        <!-- Scene Info Overlay -->
+                        <div class="scene-overlay">
+                            <div class="overlay-item">
+                                <i class="fas fa-users"></i>
+                                <span>アクティブ客数: <strong id="active-customers">0</strong></span>
+                            </div>
+                            <div class="overlay-item">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span>お菓子購入者: <strong id="snack-buyers">0</strong></span>
+                            </div>
+                            <div class="overlay-item">
+                                <i class="fas fa-eye"></i>
+                                <span>POP注視率: <strong id="pop-attention">0%</strong></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Control Panel -->
+                    <div class="control-panel">
+                        <!-- Environment Settings -->
+                        <div class="panel-section">
+                            <h3><i class="fas fa-cloud-sun"></i> 環境設定</h3>
+                            <div class="control-grid">
+                                <div class="control-item">
+                                    <label>天気</label>
+                                    <select id="weather-select">
+                                        <option value="sunny">晴れ</option>
+                                        <option value="rainy">雨</option>
+                                        <option value="cloudy">曇り</option>
+                                    </select>
+                                </div>
+                                <div class="control-item">
+                                    <label>気温</label>
+                                    <input type="range" id="temperature" min="0" max="35" value="20">
+                                    <span id="temp-value">20°C</span>
+                                </div>
+                                <div class="control-item">
+                                    <label>時間帯</label>
+                                    <select id="time-period">
+                                        <option value="morning">朝（7-11時）</option>
+                                        <option value="afternoon" selected>昼（11-15時）</option>
+                                        <option value="evening">夕方（15-19時）</option>
+                                        <option value="night">夜（19-22時）</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Customer Segments -->
+                        <div class="panel-section">
+                            <h3><i class="fas fa-users"></i> 客層構成</h3>
+                            <div class="segment-controls">
+                                <div class="segment-item">
+                                    <label>シニア (60歳~)</label>
+                                    <input type="range" id="senior-ratio" min="0" max="100" value="25">
+                                    <span class="ratio-value">25%</span>
+                                </div>
+                                <div class="segment-item">
+                                    <label>子あり世代 (30-40歳)</label>
+                                    <input type="range" id="family-ratio" min="0" max="100" value="35">
+                                    <span class="ratio-value">35%</span>
+                                </div>
+                                <div class="segment-item">
+                                    <label>シングル (20-40歳)</label>
+                                    <input type="range" id="single-ratio" min="0" max="100" value="25">
+                                    <span class="ratio-value">25%</span>
+                                </div>
+                                <div class="segment-item">
+                                    <label>若者 (10-30歳)</label>
+                                    <input type="range" id="youth-ratio" min="0" max="100" value="15">
+                                    <span class="ratio-value">15%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- POP Settings -->
+                        <div class="panel-section">
+                            <h3><i class="fas fa-bullhorn"></i> POP設定</h3>
+                            <div class="pop-controls">
+                                <div class="pop-type">
+                                    <h4>レールPOP</h4>
+                                    <div class="pop-options">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="discount-pop" checked>
+                                            <span>割引表示</span>
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="limited-pop">
+                                            <span>限定商品</span>
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="seasonal-pop">
+                                            <span>季節商品</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="pop-intensity">
+                                    <label>POP効果強度</label>
+                                    <input type="range" id="pop-intensity" min="0.1" max="3.0" step="0.1" value="1.0">
+                                    <span id="intensity-value">1.0x</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Simulation Speed -->
+                        <div class="panel-section">
+                            <h3><i class="fas fa-tachometer-alt"></i> シミュレーション</h3>
+                            <div class="control-item">
+                                <label>実行速度</label>
+                                <input type="range" id="sim-speed" min="0.1" max="5.0" step="0.1" value="1.0">
+                                <span id="speed-value">1.0x</span>
+                            </div>
+                            <div class="control-item">
+                                <label>来店者数/分</label>
+                                <input type="range" id="visitor-rate" min="1" max="20" value="5">
+                                <span id="visitor-value">5人</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analytics-tab" class="tab-content">
+                <div class="analytics-layout">
+                    <!-- KPI Cards -->
+                    <div class="kpi-section">
+                        <div class="kpi-card attention">
+                            <div class="kpi-icon"><i class="fas fa-eye"></i></div>
+                            <div class="kpi-content">
+                                <h3>注目率 (STOP)</h3>
+                                <div class="kpi-value" id="attention-rate">78.5%</div>
+                                <div class="kpi-change positive">+5.2%</div>
+                            </div>
+                        </div>
+                        <div class="kpi-card consideration">
+                            <div class="kpi-icon"><i class="fas fa-hand-paper"></i></div>
+                            <div class="kpi-content">
+                                <h3>検討率 (HOLD)</h3>
+                                <div class="kpi-value" id="consideration-rate">45.3%</div>
+                                <div class="kpi-change positive">+2.8%</div>
+                            </div>
+                        </div>
+                        <div class="kpi-card conversion">
+                            <div class="kpi-icon"><i class="fas fa-shopping-bag"></i></div>
+                            <div class="kpi-content">
+                                <h3>購入率 (CLOSE)</h3>
+                                <div class="kpi-value" id="conversion-rate">23.7%</div>
+                                <div class="kpi-change positive">+1.5%</div>
+                            </div>
+                        </div>
+                        <div class="kpi-card revenue">
+                            <div class="kpi-icon"><i class="fas fa-yen-sign"></i></div>
+                            <div class="kpi-content">
+                                <h3>売上予測</h3>
+                                <div class="kpi-value" id="revenue-forecast">¥127,350</div>
+                                <div class="kpi-change positive">+8.3%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Section -->
+                    <div class="charts-section">
+                        <div class="chart-container">
+                            <h3>時間帯別POP効果</h3>
+                            <canvas id="hourly-chart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>客層別反応率</h3>
+                            <canvas id="segment-chart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>商品カテゴリ別パフォーマンス</h3>
+                            <canvas id="category-chart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>POP種別効果比較</h3>
+                            <canvas id="pop-comparison-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Insights Tab -->
+            <div id="insights-tab" class="tab-content">
+                <div class="insights-layout">
+                    <div class="insights-header">
+                        <h2>AI インサイト & 推奨施策</h2>
+                        <button class="refresh-btn">
+                            <i class="fas fa-sync-alt"></i> 更新
+                        </button>
+                    </div>
+                    
+                    <div class="insights-grid">
+                        <div class="insight-card high-priority">
+                            <div class="insight-header">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span class="priority-badge">高優先度</span>
+                            </div>
+                            <h3>レジ前POP効果の最適化</h3>
+                            <p>現在のレジ前POP配置では、シニア層の注目率が32%と低い水準です。視線の高さを15cm下げることで、注目率を48%まで向上できると予測されます。</p>
+                            <div class="insight-metrics">
+                                <span class="metric">予想売上向上: +¥23,400/日</span>
+                                <span class="metric">実装コスト: 低</span>
+                            </div>
+                        </div>
+
+                        <div class="insight-card medium-priority">
+                            <div class="insight-header">
+                                <i class="fas fa-lightbulb"></i>
+                                <span class="priority-badge">中優先度</span>
+                            </div>
+                            <h3>季節商品の訴求強化</h3>
+                            <p>雨天時は温かいお菓子（ココア系）への需要が27%増加。天気連動POPの導入により、機会損失を削減できます。</p>
+                            <div class="insight-metrics">
+                                <span class="metric">予想売上向上: +¥15,200/日</span>
+                                <span class="metric">実装コスト: 中</span>
+                            </div>
+                        </div>
+
+                        <div class="insight-card low-priority">
+                            <div class="insight-header">
+                                <i class="fas fa-chart-line"></i>
+                                <span class="priority-badge">低優先度</span>
+                            </div>
+                            <h3>子ども向けキャラクター活用</h3>
+                            <p>子あり世代での購入決定において、キャラクターPOPの効果は限定的（+3.2%）。コスト対効果を再検討することを推奨。</p>
+                            <div class="insight-metrics">
+                                <span class="metric">予想売上向上: +¥5,800/日</span>
+                                <span class="metric">実装コスト: 高</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recommendation Engine -->
+                    <div class="recommendation-engine">
+                        <h3>AI推奨システム</h3>
+                        <div class="recommendation-controls">
+                            <select id="optimization-target">
+                                <option value="revenue">売上最大化</option>
+                                <option value="attention">注目率向上</option>
+                                <option value="conversion">購入率向上</option>
+                                <option value="cost-efficiency">コスト効率化</option>
+                            </select>
+                            <button id="generate-recommendations" class="primary-btn">
+                                <i class="fas fa-robot"></i> AI推奨を生成
+                            </button>
+                        </div>
+                        <div id="recommendations-output" class="recommendations-list">
+                            <!-- AI推奨結果がここに表示される -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="loading-overlay">
+            <div class="loading-content">
+                <div class="lotte-spinner">
+                    <div class="spinner-ring"></div>
+                    <div class="spinner-logo">LOTTE</div>
+                </div>
+                <h2>データ解析中...</h2>
+                <p id="loading-text">3D環境を初期化しています</p>
+                <div class="loading-progress">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Application Scripts -->
+    <script src="js/lotte/cognitive-models.js"></script>
+    <script src="js/lotte/customer-segments.js"></script>
+    <script src="js/lotte/pop-effects.js"></script>
+    <script src="js/lotte/environmental-factors.js"></script>
+    <script src="js/lotte/analytics-engine.js"></script>
+    <script src="js/lotte/lotte-dashboard.js"></script>
+</body>
+</html>
